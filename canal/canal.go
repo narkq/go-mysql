@@ -71,7 +71,7 @@ func NewCanal(cfg *Config) (*Canal, error) {
 		c.errorTablesGetTime = make(map[string]time.Time)
 	}
 	c.master = &masterInfo{}
-	
+
 	c.delay = new(uint32)
 
 	var err error
@@ -416,18 +416,19 @@ func (c *Canal) prepareSyncer() error {
 	}
 
 	cfg := replication.BinlogSyncerConfig{
-		ServerID:        c.cfg.ServerID,
-		Flavor:          c.cfg.Flavor,
-		Host:            seps[0],
-		Port:            uint16(port),
-		User:            c.cfg.User,
-		Password:        c.cfg.Password,
-		Charset:         c.cfg.Charset,
-		HeartbeatPeriod: c.cfg.HeartbeatPeriod,
-		ReadTimeout:     c.cfg.ReadTimeout,
-		UseDecimal:      c.cfg.UseDecimal,
-		ParseTime:       c.cfg.ParseTime,
-		SemiSyncEnabled: c.cfg.SemiSyncEnabled,
+		ServerID:           c.cfg.ServerID,
+		Flavor:             c.cfg.Flavor,
+		Host:               seps[0],
+		Port:               uint16(port),
+		User:               c.cfg.User,
+		Password:           c.cfg.Password,
+		Charset:            c.cfg.Charset,
+		HeartbeatPeriod:    c.cfg.HeartbeatPeriod,
+		ReadTimeout:        c.cfg.ReadTimeout,
+		UseDecimal:         c.cfg.UseDecimal,
+		ParseTime:          c.cfg.ParseTime,
+		SemiSyncEnabled:    c.cfg.SemiSyncEnabled,
+		TCPKeepAlivePeriod: c.cfg.TCPKeepAlivePeriod,
 	}
 
 	c.syncer = replication.NewBinlogSyncer(cfg)

@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/juju/errors"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/siddontang/go-log/log"
 	"github.com/siddontang/go-mysql/client"
 	. "github.com/siddontang/go-mysql/mysql"
@@ -92,6 +92,9 @@ type BinlogSyncerConfig struct {
 	// For MariaDB, binlog_checksum was introduced since MariaDB 5.3, but CRC32 was set as default value since MariaDB 10.2.1 .
 	// https://mariadb.com/kb/en/library/replication-and-binary-log-server-system-variables/#binlog_checksum
 	VerifyChecksum bool
+
+	// If greater than zero, will try to enable TCP keepalive on syncer connection to MySQL
+	TCPKeepAlivePeriod time.Duration
 }
 
 // BinlogSyncer syncs binlog event from server.
@@ -208,6 +211,13 @@ func (b *BinlogSyncer) registerSlave() error {
 	//set read timeout
 	if b.cfg.ReadTimeout > 0 {
 		b.c.SetReadDeadline(time.Now().Add(b.cfg.ReadTimeout))
+	}
+
+	if b.cfg.TCPKeepAlivePeriod > 0 {
+		err = b.c.SetKeepAlivePeriod(b.cfg.TCPKeepAlivePeriod)
+		if err != nil {
+			return errors.Trace(err)
+		}
 	}
 
 	if b.cfg.RecvBufferSize > 0 {

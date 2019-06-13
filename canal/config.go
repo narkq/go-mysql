@@ -49,6 +49,8 @@ type Config struct {
 	HeartbeatPeriod time.Duration `toml:"heartbeat_period"`
 	ReadTimeout     time.Duration `toml:"read_timeout"`
 
+	TCPKeepAlivePeriod time.Duration `toml:"tcp_keepalive_period"`
+
 	// IncludeTableRegex or ExcludeTableRegex should contain database name
 	// Only a table which matches IncludeTableRegex and dismatches ExcludeTableRegex will be processed
 	// eg, IncludeTableRegex : [".*\\.canal"], ExcludeTableRegex : ["mysql\\..*"]
@@ -63,7 +65,7 @@ type Config struct {
 	Dump DumpConfig `toml:"dump"`
 
 	UseDecimal bool `toml:"use_decimal"`
-	ParseTime bool  `toml:"parse_time"`
+	ParseTime  bool `toml:"parse_time"`
 
 	// SemiSyncEnabled enables semi-sync or not.
 	SemiSyncEnabled bool `toml:"semi_sync_enabled"`

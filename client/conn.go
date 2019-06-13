@@ -160,6 +160,19 @@ func (c *Conn) Rollback() error {
 	return errors.Trace(err)
 }
 
+func (c *Conn) SetKeepAlivePeriod(d time.Duration) error {
+	var err error
+	if tcp, ok := c.Conn.Conn.(*net.TCPConn); ok {
+		if err = tcp.SetKeepAlive(true); err != nil {
+			return errors.Annotate(err, "failed to enable tcp keepalive")
+		}
+		if err = tcp.SetKeepAlivePeriod(d); err != nil {
+			return errors.Annotate(err, "failed to set tcp keepalive period")
+		}
+	}
+	return err
+}
+
 func (c *Conn) SetCharset(charset string) error {
 	if c.charset == charset {
 		return nil
