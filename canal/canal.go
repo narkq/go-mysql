@@ -75,6 +75,7 @@ func NewCanal(cfg *Config) (*Canal, error) {
 	c.master = &masterInfo{}
 
 	c.delay = new(uint32)
+	c.lastEventTimestamp = new(uint32)
 
 	var err error
 
