@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/juju/errors"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/siddontang/go-log/log"
 	"github.com/siddontang/go-mysql/mysql"
 	"github.com/siddontang/go-mysql/replication"
@@ -183,6 +183,7 @@ func (c *Canal) updateReplicationDelay(ev *replication.BinlogEvent) {
 		newDelay = now - ev.Header.Timestamp
 	}
 	atomic.StoreUint32(c.delay, newDelay)
+	atomic.StoreUint32(c.lastEventTimestamp, ev.Header.Timestamp)
 }
 
 func (c *Canal) handleRowsEvent(e *replication.BinlogEvent) error {

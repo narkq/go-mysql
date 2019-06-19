@@ -51,6 +51,8 @@ type Canal struct {
 
 	ctx    context.Context
 	cancel context.CancelFunc
+
+	lastEventTimestamp *uint32
 }
 
 // canal will retry fetching unknown table's meta after UnknownTableRetryPeriod
@@ -172,6 +174,10 @@ func (c *Canal) prepareDumper() error {
 
 func (c *Canal) GetDelay() uint32 {
 	return atomic.LoadUint32(c.delay)
+}
+
+func (c *Canal) GetLastEventTimestamp() uint32 {
+	return atomic.LoadUint32(c.lastEventTimestamp)
 }
 
 // Run will first try to dump all data from MySQL master `mysqldump`,
