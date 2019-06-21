@@ -183,7 +183,9 @@ func (c *Canal) updateReplicationDelay(ev *replication.BinlogEvent) {
 		newDelay = now - ev.Header.Timestamp
 	}
 	atomic.StoreUint32(c.delay, newDelay)
-	atomic.StoreUint32(c.lastEventTimestamp, ev.Header.Timestamp)
+	if ev.Header.Timestamp > 0 {
+		atomic.StoreUint32(c.lastEventTimestamp, ev.Header.Timestamp)
+	}
 }
 
 func (c *Canal) handleRowsEvent(e *replication.BinlogEvent) error {
