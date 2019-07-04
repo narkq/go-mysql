@@ -183,6 +183,13 @@ func (c *Canal) updateReplicationDelay(ev *replication.BinlogEvent) {
 		newDelay = now - ev.Header.Timestamp
 	}
 	atomic.StoreUint32(c.delay, newDelay)
+	switch ev.Header.EventType {
+	case
+		replication.FORMAT_DESCRIPTION_EVENT,
+		replication.MARIADB_GTID_LIST_EVENT,
+		replication.MARIADB_BINLOG_CHECKPOINT_EVENT:
+		return
+	}
 	if ev.Header.Timestamp > 0 {
 		atomic.StoreUint32(c.lastEventTimestamp, ev.Header.Timestamp)
 	}
