@@ -76,6 +76,7 @@ func NewCanal(cfg *Config) (*Canal, error) {
 
 	c.delay = new(uint32)
 	c.lastEventTimestamp = new(uint32)
+	atomic.StoreUint32(c.lastEventTimestamp, uint32(time.Now().Unix()))
 
 	var err error
 
