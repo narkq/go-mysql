@@ -51,6 +51,9 @@ func (r *RowsEvent) handleUnsigned() {
 
 	for i := 0; i < len(r.Rows); i++ {
 		for _, index := range r.Table.UnsignedColumns {
+			if index >= len(r.Rows[i]) {
+				continue
+			}
 			switch t := r.Rows[i][index].(type) {
 			case int8:
 				r.Rows[i][index] = uint8(t)
